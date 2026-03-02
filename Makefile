@@ -97,6 +97,10 @@ ifeq (,$(filter $(CONFIG_LABEL_MEMORY),true false))
     $(error CONFIG_LABEL_MEMORY must be true or false)
 endif
 
+ifeq (,$(filter $(CONFIG_UNSET_RTLD_DEEPBIND),true false))
+    $(error CONFIG_UNSET_RTLD_DEEPBIND must be true or false)
+endif
+
 CPPFLAGS += \
     -DCONFIG_SEAL_METADATA=$(CONFIG_SEAL_METADATA) \
     -DZERO_ON_FREE=$(CONFIG_ZERO_ON_FREE) \
@@ -118,7 +122,8 @@ CPPFLAGS += \
     -DCONFIG_STATS=$(CONFIG_STATS) \
     -DCONFIG_SELF_INIT=$(CONFIG_SELF_INIT) \
     -DCONFIG_LABEL_MEMORY=$(CONFIG_LABEL_MEMORY) \
-    -DCONFIG_PAGE_SIZE=$(CONFIG_PAGE_SIZE)
+    -DCONFIG_PAGE_SIZE=$(CONFIG_PAGE_SIZE) \
+    -DCONFIG_UNSET_RTLD_DEEPBIND=$(CONFIG_UNSET_RTLD_DEEPBIND)
 
 $(OUT)/libhardened_malloc$(SUFFIX).so: $(OBJECTS) | $(OUT)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared $^ $(LDLIBS) -o $@
