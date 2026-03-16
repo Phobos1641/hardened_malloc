@@ -53,6 +53,10 @@ endif
 
 OBJECTS := $(addprefix $(OUT)/,$(OBJECTS))
 
+ifeq (,$(filter $(CONFIG_PAGE_SIZE),4096 16384))
+    $(error CONFIG_PAGE_SIZE must be 4096 or 16384)
+endif
+
 ifeq (,$(filter $(CONFIG_SEAL_METADATA),true false))
     $(error CONFIG_SEAL_METADATA must be true or false)
 endif
@@ -113,7 +117,8 @@ CPPFLAGS += \
     -DN_ARENA=$(CONFIG_N_ARENA) \
     -DCONFIG_STATS=$(CONFIG_STATS) \
     -DCONFIG_SELF_INIT=$(CONFIG_SELF_INIT) \
-    -DCONFIG_LABEL_MEMORY=$(CONFIG_LABEL_MEMORY)
+    -DCONFIG_LABEL_MEMORY=$(CONFIG_LABEL_MEMORY) \
+    -DCONFIG_PAGE_SIZE=$(CONFIG_PAGE_SIZE)
 
 $(OUT)/libhardened_malloc$(SUFFIX).so: $(OBJECTS) | $(OUT)
 	$(CC) $(CFLAGS) $(LDFLAGS) -shared $^ $(LDLIBS) -o $@
